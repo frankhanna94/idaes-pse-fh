@@ -1072,14 +1072,34 @@ def set_scaling_factors(m):
     iscale.set_scaling_factor(fs.fwh1.condense.cold_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh1.condense.hot_side.heat, 1e-7)
     iscale.set_scaling_factor(fs.fwh1.condense.cold_side.heat, 1e-7)
+    iscale.set_scaling_factor(fs.fwh1.drain_mix.mixed_state[0].pressure,1e-5)
+    iscale.set_scaling_factor(fs.fwh1.drain_mix.steam_state[0].pressure,1e-5)
+    iscale.set_scaling_factor(fs.fwh1.drain_mix.drain_state[0].pressure,1e-5)
+    # Condenser hot-side pressure variables
+    iscale.set_scaling_factor(fs.fwh1.condense.hot_side.properties_in[0].pressure,1e-5)
+    iscale.set_scaling_factor(fs.fwh1.condense.hot_side.properties_out[0].pressure,1e-5)
+    # Hot-side pressure drop
+    iscale.set_scaling_factor(fs.fwh1.condense.hot_side.deltaP[0],1e-5)
+
 
     ## fwh2
+    # scaling factors from original model
     iscale.set_scaling_factor(fs.fwh2.condense.hot_side.material_holdup, 1e-4)
     iscale.set_scaling_factor(fs.fwh2.condense.hot_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh2.condense.cold_side.material_holdup, 1e-4)
     iscale.set_scaling_factor(fs.fwh2.condense.cold_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh2.condense.hot_side.heat, 1e-7)
     iscale.set_scaling_factor(fs.fwh2.condense.cold_side.heat, 1e-7)
+    # added scaling following diagnostics tool analysis
+    iscale.set_scaling_factor(fs.fwh2.drain_mix.mixed_state[0].pressure, 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.drain_mix.steam_state[0].pressure, 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.condense.hot_side.properties_in[0].pressure, 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.condense.hot_side.properties_out[0].pressure, 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.condense.hot_side.deltaP[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.cooling.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.cooling.cold_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh2.cooling.delta_temperature_out[0], 1e-1)
+    iscale.set_scaling_factor(fs.fwh2.cooling.delta_temperature_in[0], 1e-1)
 
     ## fwh3
     iscale.set_scaling_factor(fs.fwh3.condense.hot_side.material_holdup, 1e-4)
@@ -1088,8 +1108,13 @@ def set_scaling_factors(m):
     iscale.set_scaling_factor(fs.fwh3.condense.cold_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh3.condense.hot_side.heat, 1e-7)
     iscale.set_scaling_factor(fs.fwh3.condense.cold_side.heat, 1e-7)
+    # added scaling following diagnostics tool analysis
+    iscale.set_scaling_factor(fs.fwh3.condense.hot_side.deltaP[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh3.cooling.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh3.cooling.cold_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh3.cooling.delta_temperature_out[0], 1e-1)
 
-    # deaerator tank
+    # fwh4 deaerator tank
     iscale.set_scaling_factor(fs.da_tank.control_volume.energy_holdup, 1e-10)
     iscale.set_scaling_factor(fs.da_tank.control_volume.material_holdup, 1e-6)
 
@@ -1100,6 +1125,17 @@ def set_scaling_factors(m):
     iscale.set_scaling_factor(fs.fwh5.condense.cold_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh5.condense.hot_side.heat, 1e-7)
     iscale.set_scaling_factor(fs.fwh5.condense.cold_side.heat, 1e-7)
+    # added scaling following numerical analysis results from diagnostics toolbox
+    iscale.set_scaling_factor(fs.fwh5.drain_mix.steam_state[0].pressure, 1e-5)
+    iscale.set_scaling_factor(fs.fwh5.drain_mix.mixed_state[0].pressure, 1e-5)  
+    iscale.set_scaling_factor(fs.fwh5.condense.hot_side.deltaP[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh5.cooling.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh5.cooling.cold_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh5.cooling.delta_temperature_out[0], 1e-1)
+    iscale.set_scaling_factor(fs.fwh5.cooling.delta_temperature_in[0], 1e-1)
+    iscale.set_scaling_factor(fs.fwh5.desuperheat.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh5.desuperheat.cold_side.heat[0], 1e-5)
+
 
     # fwh6
     iscale.set_scaling_factor(fs.fwh6.condense.hot_side.material_holdup, 1e-4)
@@ -1108,10 +1144,41 @@ def set_scaling_factors(m):
     iscale.set_scaling_factor(fs.fwh6.condense.cold_side.energy_holdup, 1e-8)
     iscale.set_scaling_factor(fs.fwh6.condense.hot_side.heat, 1e-7)
     iscale.set_scaling_factor(fs.fwh6.condense.cold_side.heat, 1e-7)
+    iscale.set_scaling_factor(fs.fwh6.condense.hot_side.deltaP[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh6.desuperheat.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh6.desuperheat.cold_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh6.desuperheat.delta_temperature_out[0], 1e-1)
+    iscale.set_scaling_factor(fs.fwh6.cooling.cold_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh6.cooling.hot_side.heat[0], 1e-5)
+    iscale.set_scaling_factor(fs.fwh6.cooling.delta_temperature_out[0], 1)
+    iscale.set_scaling_factor(fs.fwh6.cooling.delta_temperature_in[0], 1)
+    iscale.set_scaling_factor(fs.da_tank.control_volume.deltaP[0], 1e-5)
 
     # Calculate scaling factors
     iscale.calculate_scaling_factors(m)
 
+    # add scaling factors for constraint equations
+    iscale.constraint_scaling_transform(fs.fwh1.condense.pressure_change_total_eqn[0],1e-6,overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh1.drain_mix.mixer_pressure_constraint[0],1e-6,overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh2.drain_mix.mixer_pressure_constraint[0], 1e-6, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh2.condense.pressure_change_total_eqn[0], 1e-6, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh2.cooling.unit_heat_balance[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh2.cooling.heat_transfer_equation[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.drain_mix.mixer_pressure_constraint[0], 1e-6, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.condense.pressure_change_total_eqn[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.cooling.unit_heat_balance[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.cooling.heat_transfer_equation[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh3.condense.pressure_change_total_eqn[0], 1e-6, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh3.cooling.unit_heat_balance[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh3.cooling.heat_transfer_equation[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.desuperheat.unit_heat_balance[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh5.desuperheat.heat_transfer_equation[0], 1e-5, overwrite=True)
+    iscale.constraint_scaling_transform(fs.fwh6.condense.pressure_change_total_eqn[0],1e-6,overwrite=True,)
+    iscale.constraint_scaling_transform(fs.fwh6.desuperheat.unit_heat_balance[0],1e-5,overwrite=True,)
+    iscale.constraint_scaling_transform(fs.fwh6.desuperheat.heat_transfer_equation[0],1e-5,overwrite=True,)
+    iscale.constraint_scaling_transform(fs.fwh6.cooling.unit_heat_balance[0],1e-5,overwrite=True,)
+    iscale.constraint_scaling_transform(fs.fwh6.cooling.heat_transfer_equation[0],1e-5,overwrite=True,)
+    iscale.constraint_scaling_transform(fs.da_tank.pressure_change_eqn[0],1e-6,overwrite=True,)
 
 if __name__ == "__main__":
     # This method builds and runs a steam cycle flowsheet, the flowsheet
