@@ -80,7 +80,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run Spell Checker
-        uses: crate-ci/typos@v1.24.5
+        uses: crate-ci/typos@v1.48.0
         with:
           config: ./.github/workflows/typos.toml
 
@@ -92,7 +92,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         os:
           - linux
           - win64
@@ -298,7 +298,7 @@ jobs:
           echo "" > pytest.ini
       - name: Install and run compatibility tests
         run: |
-          pip install "git+https://github.com/IDAES/idaes-compatibility@0.23.8"
+          pip install "git+https://github.com/IDAES/idaes-compatibility@0.26.9"
           pytest --pyargs idaes_compatibility
       - name: Environment summary
         if: always()

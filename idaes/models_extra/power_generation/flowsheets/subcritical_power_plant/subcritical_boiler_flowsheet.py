@@ -98,14 +98,13 @@ def add_unit_models(m):
         has_heat_transfer=True,
         has_pressure_change=True,
         finite_elements=4,
-        drum_inner_diameter=1.8,
-        drum_thickness=0.13,
     )
 
     # Unit model for splitter from drum to downcomers and blowdown
     fs.blowdown_split = HelmSplitter(
         dynamic=False,
         property_package=prop_water,
+        property_package_args={"has_phase_equilibrium": False},
         outlet_list=["FW_Downcomer", "FW_Blowdown"],
     )
 
@@ -231,6 +230,7 @@ def add_unit_models(m):
     fs.Attemp = HelmMixer(
         dynamic=False,
         property_package=prop_water,
+        property_package_args={"has_phase_equilibrium": False},
         momentum_mixing_type=MomentumMixingType.equality,
         inlet_list=["Steam_inlet", "Water_inlet"],
     )
@@ -238,8 +238,8 @@ def add_unit_models(m):
     # Unit model for air preheater as three-stream heat exchanger
     # with heat loss to ambient
     # side_1: flue gas
-    # side_2: priamry air
-    # side_3: secondry air
+    # side_2: primary air
+    # side_3: secondary air
     fs.aAPH = HeatExchangerWith3Streams(
         dynamic=False,
         side_1_property_package=prop_gas,
@@ -503,6 +503,8 @@ def set_inputs(m):
 
     # drum inputs
     fs.aDrum.drum_length.fix(16.0)
+    fs.aDrum.drum_diameter.fix(1.8)  # Inner diameter
+    fs.aDrum.drum_thickness.fix(0.13)  # Wall thickness
     fs.aDrum.level[:].fix(0.9)
     fs.aDrum.number_downcomer.fix(8)
     fs.aDrum.downcomer_diameter.fix(0.375)
