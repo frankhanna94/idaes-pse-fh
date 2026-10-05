@@ -765,105 +765,105 @@ def print_results(m):
     """
     _log.info("Printing Results")
     _log.info("Results")
-    _log.info()
+    _log.info("")
 
-    _log.info("viscosity gas side = ", m.fs.PrSH.hot_side.properties_in[0].visc_d.value)
+    _log.info("viscosity gas side = %s", m.fs.PrSH.hot_side.properties_in[0].visc_d.value)
     _log.info(
-        "conductivity gas side = ", m.fs.PrSH.hot_side.properties_in[0].therm_cond.value
+        "conductivity gas side = %s", m.fs.PrSH.hot_side.properties_in[0].therm_cond.value
     )
-    _log.info("velocity_tube = ", m.fs.PrSH.v_tube[0].value)
-    _log.info("velocity_shell = ", m.fs.PrSH.v_shell[0].value)
-    _log.info("Re_tube = ", m.fs.PrSH.N_Re_tube[0].value)
-    _log.info("Re_shell = ", m.fs.PrSH.N_Re_shell[0].value)
-    _log.info("hconv_tube = ", m.fs.PrSH.hconv_tube[0].value)
-    _log.info("hconv_shell_rad = ", m.fs.PrSH.hconv_shell_rad[0].value)
-    _log.info("hconv_shell_conv = ", m.fs.PrSH.hconv_shell_conv[0].value)
-    _log.info("hconv_shell_total = ", m.fs.PrSH.hconv_shell_total[0].value)
-    _log.info("driving force = ", value(m.fs.PrSH.delta_temperature[0]))
-    _log.info("dT_inlet = ", m.fs.PrSH.deltaT_1[0].value)
-    _log.info("dT_outlet = ", m.fs.PrSH.deltaT_2[0].value)
-    _log.info("deltaP tube = ", m.fs.PrSH.deltaP_tube[0].value)
-    _log.info("deltaP shell = ", m.fs.PrSH.deltaP_shell[0].value)
-    _log.info("mbl = ", value(m.fs.PrSH.mbl))
+    _log.info("velocity_tube = %s", m.fs.PrSH.v_tube[0].value)
+    _log.info("velocity_shell = %s", m.fs.PrSH.v_shell[0].value)
+    _log.info("Re_tube = %s", m.fs.PrSH.N_Re_tube[0].value)
+    _log.info("Re_shell = %s", m.fs.PrSH.N_Re_shell[0].value)
+    _log.info("hconv_tube = %s", m.fs.PrSH.hconv_tube[0].value)
+    _log.info("hconv_shell_rad = %s", m.fs.PrSH.hconv_shell_rad[0].value)
+    _log.info("hconv_shell_conv = %s", m.fs.PrSH.hconv_shell_conv[0].value)
+    _log.info("hconv_shell_total = %s", m.fs.PrSH.hconv_shell_total[0].value)
+    _log.info("driving force = %s", value(m.fs.PrSH.delta_temperature[0]))
+    _log.info("dT_inlet = %s", m.fs.PrSH.deltaT_1[0].value)
+    _log.info("dT_outlet = %s", m.fs.PrSH.deltaT_2[0].value)
+    _log.info("deltaP tube = %s", m.fs.PrSH.deltaP_tube[0].value)
+    _log.info("deltaP shell = %s", m.fs.PrSH.deltaP_shell[0].value)
+    _log.info("mbl = %s", value(m.fs.PrSH.mbl))
 
     if m.fs.PrSH.config.has_radiation is True:
-        _log.info("gas emissivity = ", m.fs.PrSH.gas_emissivity[0].value)
-        _log.info("gas emissivity div2 = ", m.fs.PrSH.gas_emissivity_div2[0].value)
-        _log.info("gas emissivity mul2 = ", m.fs.PrSH.gas_emissivity_mul2[0].value)
-        _log.info("gas gray fraction = ", m.fs.PrSH.gas_gray_fraction[0].value)
+        _log.info("gas emissivity = %s", m.fs.PrSH.gas_emissivity[0].value)
+        _log.info("gas emissivity div2 = %s", m.fs.PrSH.gas_emissivity_div2[0].value)
+        _log.info("gas emissivity mul2 = %s", m.fs.PrSH.gas_emissivity_mul2[0].value)
+        _log.info("gas gray fraction = %s", m.fs.PrSH.gas_gray_fraction[0].value)
     _log.info(
-        "liquid density in = ",
+        "liquid density in = %s",
         value(m.fs.PrSH.cold_side.properties_in[0].dens_mass_phase["Liq"]),
     )
 
     _log.info(
-        "liquid density out = ",
+        "liquid density out = %s",
         value(m.fs.PrSH.cold_side.properties_out[0].dens_mass_phase["Liq"]),
     )
-    _log.info("heat transfer area = ", value(m.fs.PrSH.area))
+    _log.info("heat transfer area = %s", value(m.fs.PrSH.area))
     _log.info(
-        "overall heat transfer = ",
+        "overall heat transfer = %s",
         value(m.fs.PrSH.overall_heat_transfer_coefficient[0]),
     )
 
     _log.info("\n\n ------------- Economizer   ---------")
-    _log.info("liquid temp in = ", value(m.fs.ECON.cold_side.properties_in[0].temperature))
-    _log.info("liquid temp out = ", value(m.fs.ECON.cold_side.properties_out[0].temperature))
-    _log.info("gas temp in = ", value(m.fs.ECON.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = ", value(m.fs.ECON.hot_side.properties_out[0].temperature))
+    _log.info("liquid temp in = %s", value(m.fs.ECON.cold_side.properties_in[0].temperature))
+    _log.info("liquid temp out = %s", value(m.fs.ECON.cold_side.properties_out[0].temperature))
+    _log.info("gas temp in = %s", value(m.fs.ECON.hot_side.properties_in[0].temperature))
+    _log.info("gas temp out = %s", value(m.fs.ECON.hot_side.properties_out[0].temperature))
 
     _log.info("\n\n ------------- water wall  ---------")
     _log.info(
-        "liquid temp in = ",
+        "liquid temp in = %s",
         value(m.fs.Water_wall.control_volume.properties_in[0].temperature),
     )
     _log.info(
-        "steam temp out = ",
+        "steam temp out = %s",
         value(m.fs.Water_wall.control_volume.properties_out[0].temperature),
     )
 
     _log.info("\n\n ------------- Primary Superheater  ---------")
-    _log.info("steam temp in = ", value(m.fs.PrSH.cold_side.properties_in[0].temperature))
-    _log.info("steam temp out = ", value(m.fs.PrSH.cold_side.properties_out[0].temperature))
-    _log.info("gas temp in = ", value(m.fs.PrSH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = ", value(m.fs.PrSH.hot_side.properties_out[0].temperature))
+    _log.info("steam temp in = %s", value(m.fs.PrSH.cold_side.properties_in[0].temperature))
+    _log.info("steam temp out = %s", value(m.fs.PrSH.cold_side.properties_out[0].temperature))
+    _log.info("gas temp in = %s", value(m.fs.PrSH.hot_side.properties_in[0].temperature))
+    _log.info("gas temp out = %s", value(m.fs.PrSH.hot_side.properties_out[0].temperature))
 
     _log.info("\n\n ------------- Platen SH  ---------")
     _log.info(
-        "steam temp in = ", value(m.fs.PlSH.control_volume.properties_in[0].temperature)
+        "steam temp in = %s", value(m.fs.PlSH.control_volume.properties_in[0].temperature)
     )
     _log.info(
-        "steam temp out = ",
+        "steam temp out = %s",
         value(m.fs.PlSH.control_volume.properties_out[0].temperature),
     )
 
     _log.info("\n\n ------------- Finishing Superheater  ---------")
-    _log.info("steam temp in = ", value(m.fs.FSH.cold_side.properties_in[0].temperature))
+    _log.info("steam temp in = %s", value(m.fs.FSH.cold_side.properties_in[0].temperature))
     _log.info(
-        "steam temp out (to attmp) = ",
+        "steam temp out (to attmp) = %s",
         value(m.fs.FSH.cold_side.properties_out[0].temperature),
     )
-    _log.info("gas temp in = ", value(m.fs.FSH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = ", value(m.fs.FSH.hot_side.properties_out[0].temperature))
+    _log.info("gas temp in = %s", value(m.fs.FSH.hot_side.properties_in[0].temperature))
+    _log.info("gas temp out = %s", value(m.fs.FSH.hot_side.properties_out[0].temperature))
 
     _log.info("\n\n ------------- Attemperator  ---------")
     _log.info(
-        "steam temp in = ",
+        "steam temp in = %s, temperature = %s",
         value(m.fs.ATMP1.Steam.enth_mol[0]),
         value(m.fs.FSH.cold_side.properties_out[0].temperature),
     )
     _log.info(
-        "steam temp out (to HP turbine) = ",
+        "steam temp out (to HP turbine) = %s, temperature = %s",
         value(m.fs.ATMP1.outlet.enth_mol[0]),
         value(m.fs.ATMP1.mixed_state[0].temperature),
     )
-    _log.info()
+    _log.info("")
 
     _log.info("\n\n ------------- Reheater  ---------")
-    _log.info("liquid temp in = ", value(m.fs.RH.cold_side.properties_in[0].temperature))
-    _log.info("liquid temp out = ", value(m.fs.RH.cold_side.properties_out[0].temperature))
-    _log.info("gas temp in = ", value(m.fs.RH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = ", value(m.fs.RH.hot_side.properties_out[0].temperature))
+    _log.info("liquid temp in = %s", value(m.fs.RH.cold_side.properties_in[0].temperature))
+    _log.info("liquid temp out = %s", value(m.fs.RH.cold_side.properties_out[0].temperature))
+    _log.info("gas temp in = %s", value(m.fs.RH.hot_side.properties_in[0].temperature))
+    _log.info("gas temp out = %s", value(m.fs.RH.hot_side.properties_out[0].temperature))
 
 def unfix_inlets(m):
     """
