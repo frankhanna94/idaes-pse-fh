@@ -40,6 +40,7 @@ Main Assumptions:
                 - tube side: Steam (side 1 holdup)
                 - shell side: flue gas (side 2 holdup)
 
+
     Property packages used:
         - IAPWS: Water/steam side
         - IDEAL GAS: Flue Gas side
@@ -317,17 +318,22 @@ def scale_unit(unit, label):
         f"gaps before AutoScaler=({len(variables_after_default)} vars, "
         f"{len(constraints_after_default)} cons), remaining="
         f"({len(remaining_variables)} vars, {len(remaining_constraints)} cons)"
+
     )
+
     return default_scaler, gap_scaler
 
 
 def initialize(m):
     """
     This function initializes the boiler subflowsheet model by setting initial values for
+
     the economizer, water wall, primary superheater, platen superheater, finishing superheater,
+
     attemperator, splitter, reheater, and mixer units.
     It also propagates the state of the streams between the units and scales the units using the
     scale_unit helper function.
+
 
     Parameters
     ----------

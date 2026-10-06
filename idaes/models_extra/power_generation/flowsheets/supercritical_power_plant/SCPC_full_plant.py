@@ -109,8 +109,7 @@ def main():
         for more details
 
     2.  Build the boiler heat exchanger network flowsheet using the build_boiler function.
-        See: idaes/models_extra/power_generation/flowsheets/supercritical_power_plant/
-                boiler_subflowsheet_build.py for more details
+        See the ``boiler_subflowsheet_build.py`` module for more details.
         This step involves appending the boiler unit models into the steam cycle model,
         resulting in a single model object containing both flowsheets.
 
