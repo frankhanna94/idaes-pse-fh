@@ -46,12 +46,12 @@ Main Assumptions:
         - IDEAL GAS: Flue Gas side
 
     Numerical scaling approach
-        
+
         - Scaling is done by initializing the coupled flowsheet sequentially with a
         reconciliation pass, applying each unit’s default scaler, and using AutoScaler
         to fill remaining gaps based on initialized variable magnitudes and Jacobian
         row norms before the final solve.
-      
+
 Created: 1/10/2020 by Boiler subsystem team (M Zamarripa)
 Modified: 10/01/2026 (F Hanna)
 """
