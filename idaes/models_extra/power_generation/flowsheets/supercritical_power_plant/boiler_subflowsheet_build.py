@@ -36,6 +36,7 @@ Main Assumptions:
         - Mixers: Attemperator, Flue gas mix
         - Heater: Platen SH, Fire/Water side (simplified model)
         - BoilerHeatExchanger: Economizer, Primary SH, Finishing SH, Reheater
+
             + Shell and tube heat exchanger
                 - tube side: Steam (side 1 holdup)
                 - shell side: flue gas (side 2 holdup)
