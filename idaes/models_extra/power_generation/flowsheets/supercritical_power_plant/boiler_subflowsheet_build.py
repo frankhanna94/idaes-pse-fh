@@ -179,12 +179,12 @@ def build_boiler(fs):
         * Reheater
         * Mixer
 
-    Parameters:
+    Parameters
     ----------
     fs : FlowsheetBlock
         The flowsheet block to which the boiler subflowsheet will be added.
 
-    Returns:
+    Returns
     -------
     None
     """
@@ -329,12 +329,12 @@ def initialize(m):
     It also propagates the state of the streams between the units and scales the units using the
     scale_unit helper function.
 
-    Parameters:
+    Parameters
     ----------
     m : ConcreteModel
         The Pyomo model containing the flowsheet to be initialized.
 
-    Returns:
+    Returns
     -------
     None
     """
@@ -664,12 +664,12 @@ def scale_solve(m):
     3. Scale variables by magnitude and constraints by Jacobian norm, without overwriting existing factors.
     4. Solve the flowsheet using the specified solver and print the results.
 
-    Parameters:
+    Parameters
     ----------
     m : ConcreteModel
         The Pyomo model containing the flowsheet to be scaled and solved.
 
-    Returns:
+    Returns
     -------
     results : SolverResults
         The results of the solver after solving the flowsheet.
@@ -757,10 +757,12 @@ def pfd_result(outfile, m, df):
 def _stream_dict(m):
     """Adds _streams to m, which contains a dictionary of streams for display
 
-    Args:
+    Parameters
+    ----------
         m (ConcreteModel): A Pyomo model from create_model()
 
-    Returns:
+    Returns
+    -------
         None
     """
     # We control m
@@ -938,12 +940,12 @@ def unfix_inlets(m):
     The remaining parameters are unfixed to ensure that the full model can be solved with the
     appropriate degrees of freedom.
 
-    Parameters:
+    Parameters
     ----------
     m : ConcreteModel
         A Pyomo model from create_model()
 
-    Returns:
+    Returns
     -------
     None
     """

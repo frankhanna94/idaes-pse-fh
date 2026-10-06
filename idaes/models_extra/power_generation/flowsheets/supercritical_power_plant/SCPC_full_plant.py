@@ -102,11 +102,13 @@ def main():
     This function builds the supercritical power plant model, including the steam cycle
     and boiler heat exchanger network.
 
-    Logic:
-    1. Build the steam cycle flowsheet using the setup_steam_cycle function.
+    Logic
+    -----
+    1.  Build the steam cycle flowsheet using the setup_steam_cycle function.
         See: idaes/models_extra/power_generation/flowsheets/supercritical_steam_cycle.py
-                for more details
-    2. Build the boiler heat exchanger network flowsheet using the build_boiler function.
+        for more details
+
+    2.  Build the boiler heat exchanger network flowsheet using the build_boiler function.
         See: idaes/models_extra/power_generation/flowsheets/supercritical_power_plant/
                 boiler_subflowsheet_build.py for more details
         This step involves appending the boiler unit models into the steam cycle model,
@@ -115,19 +117,19 @@ def main():
 
     Notes
     -----
-    1. The initialized model may be saved to ``SCPC_full.json`` using
-    ``MS.to_json()`` and restored in a later run using ``MS.from_json()``.
+    1.  The initialized model may be saved to ``SCPC_full.json`` using
+        ``MS.to_json()`` and restored in a later run using ``MS.from_json()``.
 
-    2. If the connected model produces an infeasible solution, the high-pressure
-    turbine connection can be tested by deactivating the enthalpy and pressure
-    equalities on ``m.fs.Att2HP_expanded`` and fixing the corresponding inlet
-    conditions on ``m.fs.turb.inlet_split.inlet``. The fixed values should be
-    checked against the outlet conditions from ``m.fs.ATMP1``.
+    2.  If the connected model produces an infeasible solution, the high-pressure
+        turbine connection can be tested by deactivating the enthalpy and pressure
+        equalities on ``m.fs.Att2HP_expanded`` and fixing the corresponding inlet
+        conditions on ``m.fs.turb.inlet_split.inlet``. The fixed values should be
+        checked against the outlet conditions from ``m.fs.ATMP1``.
 
-    3. To maintain the high-pressure turbine inlet temperature at approximately
-    866 K, fix the attemperator outlet molar enthalpy and unfix the platen
-    superheater heat duty. Using enthalpy to control temperature is valid here
-    only when the corresponding pressure is also fixed.
+    3.  To maintain the high-pressure turbine inlet temperature at approximately
+        866 K, fix the attemperator outlet molar enthalpy and unfix the platen
+        superheater heat duty. Using enthalpy to control temperature is valid here
+        only when the corresponding pressure is also fixed.
     """
     # Build the steam cycle flowsheet
     _log.info("Building steam cycle flowsheet")
