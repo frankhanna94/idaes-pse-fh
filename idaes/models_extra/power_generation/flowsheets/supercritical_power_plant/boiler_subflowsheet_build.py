@@ -392,7 +392,7 @@ def initialize(m):
     _log.info("Initializing Economizer Unit")
     m.fs.ECON.initialize(outlvl=logging.INFO)
     _log.info("Scaling Economizer Unit")
-    econ_scaler = scale_unit(m.fs.ECON, "ECON")
+    scale_unit(m.fs.ECON, "ECON")
 
     # ------- Water wall Superheater ----------------------------------------
     # propagate the economizer outlet state to the water-wall inlet
@@ -404,7 +404,7 @@ def initialize(m):
     _log.info("Initializing Water Wall Unit")
     m.fs.Water_wall.initialize(outlvl=logging.INFO)
     _log.info("Scaling Water Wall Unit")
-    ww_scaler = scale_unit(m.fs.Water_wall, "Water_wall")
+    scale_unit(m.fs.Water_wall, "Water_wall")
 
     # --------- Primary Superheater -----------------------------------------
     # Steam from water wall
@@ -448,7 +448,7 @@ def initialize(m):
     m.fs.PrSH.initialize(outlvl=logging.INFO)
     # scale the PrSH unit
     _log.info("Scaling Primary Superheater Unit")
-    prsh_scaler = scale_unit(m.fs.PrSH, "PrSH")
+    scale_unit(m.fs.PrSH, "PrSH")
 
     # --------- Platen Superheater ------------------------------------------
     # propagate the PrSH outlet state to the PlSH inlet
@@ -461,7 +461,7 @@ def initialize(m):
     m.fs.PlSH.initialize(outlvl=logging.INFO)
     # scale the PlSH unit
     _log.info("Scaling Platen Superheater Unit")
-    plsh_scaler = scale_unit(m.fs.PlSH, "PlSH")
+    scale_unit(m.fs.PlSH, "PlSH")
 
     #  -------- Finishing Superheater ----------------------------------------
     # propagate the PlSH outlet state to the FSH cold-side inlet
@@ -504,7 +504,7 @@ def initialize(m):
     m.fs.FSH.initialize(outlvl=logging.INFO)
     # scale the FSH unit
     _log.info("Scaling Finishing Superheater Unit")
-    fsh_scaler = scale_unit(m.fs.FSH, "FSH")
+    scale_unit(m.fs.FSH, "FSH")
 
     # --------- Attemperator inputs ------------------------------------------
     # propagate the FSH steam outlet state to the ATMP1 steam inlet
@@ -520,7 +520,7 @@ def initialize(m):
     m.fs.ATMP1.initialize(outlvl=logging.INFO)
     # scale the ATMP1 unit
     _log.info("Scaling Attemperator Unit")
-    atmp_scaler = scale_unit(m.fs.ATMP1, "ATMP1")
+    scale_unit(m.fs.ATMP1, "ATMP1")
 
     # --------- Splitter ----------------------------------------------------
     # splitter flue gas from Finishing SH to Reheater and Primary SH
@@ -585,7 +585,7 @@ def initialize(m):
     m.fs.RH.initialize(outlvl=logging.INFO)
     # scale the RH unit
     _log.info("Scaling Reheater Unit")
-    rh_scaler = scale_unit(m.fs.RH, "RH")
+    scale_unit(m.fs.RH, "RH")
 
     # Reinitialize PrSH with the propagated splitter branch. Its steam-side inlet
     # remains the initialized Water_wall outlet from the earlier steam-path pass.
@@ -625,7 +625,7 @@ def initialize(m):
     m.fs.mix1.initialize(outlvl=logging.INFO)
     # scale the mixer unit
     _log.info("Scaling Mixer Unit")
-    mix_scaler = scale_unit(m.fs.mix1, "mix1")
+    scale_unit(m.fs.mix1, "mix1")
 
     # Release states determined by connected flue-gas arcs. FSH hot-side inlet
     # remains the external boiler-gas boundary; RH cold-side inlet remains the
