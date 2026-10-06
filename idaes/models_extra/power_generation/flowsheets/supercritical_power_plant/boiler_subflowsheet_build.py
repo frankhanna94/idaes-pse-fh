@@ -46,11 +46,12 @@ Main Assumptions:
         - IDEAL GAS: Flue Gas side
 
     Numerical scaling approach
+        
         - Scaling is done by initializing the coupled flowsheet sequentially with a
         reconciliation pass, applying each unit’s default scaler, and using AutoScaler
         to fill remaining gaps based on initialized variable magnitudes and Jacobian
         row norms before the final solve.
-
+      
 Created: 1/10/2020 by Boiler subsystem team (M Zamarripa)
 Modified: 10/01/2026 (F Hanna)
 """
@@ -167,18 +168,22 @@ def build_boiler(fs):
     This includes creating the necessary unit models and connecting them with arcs to
     represent the flow of water/steam and flue gas through the boiler system.
     The boiler subflowsheet includes two main flow paths:
+
     1. The water/steam flow path, which consists of the following components:
-        * Economizer
-        * Water wall
-        * Primary superheater
-        * Platen superheater
-        * Finishing superheater
-        * Reheater
+
+       * Economizer
+       * Water wall
+       * Primary superheater
+       * Platen superheater
+       * Finishing superheater
+       * Reheater
+
     2. The flue gas flow path, which consists of the following components:
-        * Finishing superheater
-        * Splitter
-        * Reheater
-        * Mixer
+
+       * Finishing superheater
+       * Splitter
+       * Reheater
+       * Mixer
 
     Parameters
     ----------
