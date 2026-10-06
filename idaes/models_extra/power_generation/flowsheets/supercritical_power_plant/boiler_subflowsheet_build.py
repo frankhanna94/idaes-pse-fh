@@ -318,7 +318,6 @@ def scale_unit(unit, label):
         f"gaps before AutoScaler=({len(variables_after_default)} vars, "
         f"{len(constraints_after_default)} cons), remaining="
         f"({len(remaining_variables)} vars, {len(remaining_constraints)} cons)"
-
     )
 
     return default_scaler, gap_scaler
