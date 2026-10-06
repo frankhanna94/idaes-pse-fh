@@ -24,10 +24,10 @@ Main Assumptions:
 
     Boiler heat exchanger network:
         Water Flow:
-            BFW -> ECONOMIZER -> Water Wall -> Primary SH -> Platen SH -> Finishing 
+            BFW -> ECONOMIZER -> Water Wall -> Primary SH -> Platen SH -> Finishing
             Superheate -> HP Turbine -> Reheater -> IP Turbine
         Flue Gas Flow:
-            Fire Ball -> Platen SH -> Finishing SH -> Reheater  -> o -> Economizer -> 
+            Fire Ball -> Platen SH -> Finishing SH -> Reheater  -> o -> Economizer ->
             Air Preheater -> Primary SH --^
 
         * HP Turbine, IP Turbine, Air Preheater ==> not included in this release
@@ -45,9 +45,9 @@ Main Assumptions:
         - IDEAL GAS: Flue Gas side
 
     Numerical scaling approach
-        - Scaling is done by initializing the coupled flowsheet sequentially with a 
-        reconciliation pass, applying each unit’s default scaler, and using AutoScaler 
-        to fill remaining gaps based on initialized variable magnitudes and Jacobian 
+        - Scaling is done by initializing the coupled flowsheet sequentially with a
+        reconciliation pass, applying each unit’s default scaler, and using AutoScaler
+        to fill remaining gaps based on initialized variable magnitudes and Jacobian
         row norms before the final solve.
 
 Created: 1/10/2020 by Boiler subsystem team (M Zamarripa)
@@ -85,8 +85,11 @@ from idaes.core.util.initialization import propagate_state as _set_port
 from idaes.core.scaling import AutoScaler, set_scaling_factor
 from idaes.core.solvers import get_solver
 from idaes.core.scaling.util import (
-    get_scaling_factor, list_unscaled_constraints, list_unscaled_variables,
+    get_scaling_factor,
+    list_unscaled_constraints,
+    list_unscaled_variables,
 )
+
 # Import Unit Model Modules
 from idaes.models.properties import iapws95
 
@@ -109,6 +112,7 @@ from idaes.models.unit_models.separator import (
 # setup logger
 _log = idaeslog.getModelLogger(__name__, logging.INFO)
 
+
 def main():
     """
     Make the flowsheet object, fix some variables, and solve the problem
@@ -130,6 +134,7 @@ def main():
     _log.info("Creating Solver")
     solver = get_solver()
     return (m, solver)
+
 
 def boiler_hx(fs, phase, radiation):
     """
@@ -154,12 +159,13 @@ def boiler_hx(fs, phase, radiation):
         has_radiation=radiation,
     )
 
+
 def build_boiler(fs):
     """
     This function builds the boiler subflowsheet within the given flowsheet block.
     This includes creating the necessary unit models and connecting them with arcs to
     represent the flow of water/steam and flue gas through the boiler system.
-    The boiler subflowsheet includes two main flow paths: 
+    The boiler subflowsheet includes two main flow paths:
     1. The water/steam flow path, which consists of the following components:
         * Economizer
         * Water wall
@@ -172,12 +178,12 @@ def build_boiler(fs):
         * Splitter
         * Reheater
         * Mixer
-    
+
     Parameters:
     ----------
     fs : FlowsheetBlock
         The flowsheet block to which the boiler subflowsheet will be added.
-    
+
     Returns:
     -------
     None
@@ -234,7 +240,7 @@ def build_boiler(fs):
     #    fs.fsh2hpturbine = Arc(source=fs.ATMP1.outlet,
     #                           destination=fs.HPTinlet)
 
-    # Flue gas route 
+    # Flue gas route
     # water wall connected with boiler block (to fix the heat duty)
     # platen SH connected with boiler block (to fix the heat duty)
     # Finishing superheater connected with a flowsheet level constraint
@@ -246,6 +252,7 @@ def build_boiler(fs):
     fs.fg_mix2econ = Arc(source=fs.mix1.outlet, destination=fs.ECON.hot_side_inlet)
 
     TransformationFactory("network.expand_arcs").apply_to(fs)
+
 
 def scale_unit(unit, label):
     """
@@ -269,7 +276,7 @@ def scale_unit(unit, label):
             The unit model's default scaler instance, or ``None`` if the unit
             does not provide one.
         gap_scaler : AutoScaler
-            The AutoScaler instance used to fill missing scaling factors.    
+            The AutoScaler instance used to fill missing scaling factors.
     """
     # The Helmholtz/IAPWS default scaler requires representative molar-flow
     # factors. Supply these from initialized nominal values before invoking it.
@@ -288,9 +295,7 @@ def scale_unit(unit, label):
     variables_after_default = list_unscaled_variables(
         unit, descend_into=True, include_fixed=False
     )
-    constraints_after_default = list_unscaled_constraints(
-        unit, descend_into=True
-    )
+    constraints_after_default = list_unscaled_constraints(unit, descend_into=True)
 
     # Fill only gaps left by the unit's default scaler. Existing factors are
     # protected because overwrite=False.
@@ -298,17 +303,15 @@ def scale_unit(unit, label):
     if variables_after_default:
         gap_scaler.scale_variables_by_magnitude(unit, descend_into=True)
     if constraints_after_default:
-        gap_scaler.scale_constraints_by_jacobian_norm(
-            unit, norm=2, descend_into=True
-        )
+        gap_scaler.scale_constraints_by_jacobian_norm(unit, norm=2, descend_into=True)
 
     remaining_variables = list_unscaled_variables(
         unit, descend_into=True, include_fixed=False
     )
-    remaining_constraints = list_unscaled_constraints(
-        unit, descend_into=True
+    remaining_constraints = list_unscaled_constraints(unit, descend_into=True)
+    scaler_name = (
+        type(default_scaler).__name__ if default_scaler is not None else "None"
     )
-    scaler_name = type(default_scaler).__name__ if default_scaler is not None else "None"
     print(
         f"{label}: default={scaler_name}, required flow factors={required_flow_factors}, "
         f"gaps before AutoScaler=({len(variables_after_default)} vars, "
@@ -317,19 +320,20 @@ def scale_unit(unit, label):
     )
     return default_scaler, gap_scaler
 
+
 def initialize(m):
     """
     This function initializes the boiler subflowsheet model by setting initial values for
-    the economizer, water wall, primary superheater, platen superheater, finishing superheater, 
-    attemperator, splitter, reheater, and mixer units. 
-    It also propagates the state of the streams between the units and scales the units using the 
+    the economizer, water wall, primary superheater, platen superheater, finishing superheater,
+    attemperator, splitter, reheater, and mixer units.
+    It also propagates the state of the streams between the units and scales the units using the
     scale_unit helper function.
 
     Parameters:
     ----------
     m : ConcreteModel
         The Pyomo model containing the flowsheet to be initialized.
-    
+
     Returns:
     -------
     None
@@ -343,9 +347,16 @@ def initialize(m):
 
     # FLUE GAS Inlet from Primary Superheater
     FGrate = 21290.6999  # mol/s
-    comp={"H2O":.0869,"CO2":.1449,"N2":.7434,"O2":.0247,"NO":.0006,"SO2":.002}
-    for j,x in comp.items(): 
-        m.fs.ECON.hot_side_inlet.flow_mol_comp[0,j].fix(FGrate * x)
+    comp = {
+        "H2O": 0.0869,
+        "CO2": 0.1449,
+        "N2": 0.7434,
+        "O2": 0.0247,
+        "NO": 0.0006,
+        "SO2": 0.002,
+    }
+    for j, x in comp.items():
+        m.fs.ECON.hot_side_inlet.flow_mol_comp[0, j].fix(FGrate * x)
     m.fs.ECON.hot_side_inlet.temperature[0].fix(682.335)  # K
     m.fs.ECON.hot_side_inlet.pressure[0].fix(100145)  # Pa
 
@@ -353,7 +364,7 @@ def initialize(m):
     ITM = 0.0254  # inch to meter conversion
     # Based on NETL Baseline Report Rev3
     # calc inner diameter (2 = outer diameter, thickness = 0.188)
-    m.fs.ECON.tube_di.fix((2 - 2 * 0.188) * ITM)                 
+    m.fs.ECON.tube_di.fix((2 - 2 * 0.188) * ITM)
     m.fs.ECON.tube_thickness.fix(0.188 * ITM)  # tube thickness
     m.fs.ECON.pitch_x.fix(3.5 * ITM)
     # pitch_y = (54.5) gas path transverse width /columns
@@ -381,7 +392,7 @@ def initialize(m):
     _log.info("Initializing Economizer Unit")
     m.fs.ECON.initialize(outlvl=logging.INFO)
     _log.info("Scaling Economizer Unit")
-    econ_scaler=scale_unit(m.fs.ECON,"ECON")
+    econ_scaler = scale_unit(m.fs.ECON, "ECON")
 
     # ------- Water wall Superheater ----------------------------------------
     # propagate the economizer outlet state to the water-wall inlet
@@ -389,7 +400,7 @@ def initialize(m):
     _set_port(arc=m.fs.econ2ww)
     m.fs.Water_wall.heat_duty[:].fix(7.51e8)  # 8.76e8
 
-    # Intialize the water wall unit
+    # Initialize the water wall unit
     _log.info("Initializing Water Wall Unit")
     m.fs.Water_wall.initialize(outlvl=logging.INFO)
     _log.info("Scaling Water Wall Unit")
@@ -400,12 +411,12 @@ def initialize(m):
     # propagate the water-wall outlet state to the PrSH cold-side inlet
     _log.info("Setting Primary Superheater Inlet Conditions")
     _set_port(arc=m.fs.ww2prsh)
-   
+
     # FLUE GAS Inlet from Primary Superheater
     FGrate = 21290.6999 * 0.18  # mol/s
     # Use FG molar composition to set component flow rates (baseline report)
-    for j,x in comp.items(): 
-        m.fs.PrSH.hot_side_inlet.flow_mol_comp[0,j].fix(FGrate*x)
+    for j, x in comp.items():
+        m.fs.PrSH.hot_side_inlet.flow_mol_comp[0, j].fix(FGrate * x)
     m.fs.PrSH.hot_side_inlet.temperature[0].fix(1180.335)
     m.fs.PrSH.hot_side_inlet.pressure[0].fix(100145)
 
@@ -437,7 +448,7 @@ def initialize(m):
     m.fs.PrSH.initialize(outlvl=logging.INFO)
     # scale the PrSH unit
     _log.info("Scaling Primary Superheater Unit")
-    prsh_scaler=scale_unit(m.fs.PrSH,"PrSH")
+    prsh_scaler = scale_unit(m.fs.PrSH, "PrSH")
 
     # --------- Platen Superheater ------------------------------------------
     # propagate the PrSH outlet state to the PlSH inlet
@@ -450,7 +461,7 @@ def initialize(m):
     m.fs.PlSH.initialize(outlvl=logging.INFO)
     # scale the PlSH unit
     _log.info("Scaling Platen Superheater Unit")
-    plsh_scaler=scale_unit(m.fs.PlSH,"PlSH")
+    plsh_scaler = scale_unit(m.fs.PlSH, "PlSH")
 
     #  -------- Finishing Superheater ----------------------------------------
     # propagate the PlSH outlet state to the FSH cold-side inlet
@@ -460,8 +471,8 @@ def initialize(m):
     # FLUE GAS Inlet from Primary Superheater
     FGrate = 21290.6999  # mol/s
     # Use FG molar composition to set component flow rates (baseline report)
-    for j,x in comp.items(): 
-        m.fs.FSH.hot_side_inlet.flow_mol_comp[0,j].fix(FGrate*x)
+    for j, x in comp.items():
+        m.fs.FSH.hot_side_inlet.flow_mol_comp[0, j].fix(FGrate * x)
     m.fs.FSH.hot_side_inlet.temperature[0].fix(1300.335)
     m.fs.FSH.hot_side_inlet.pressure[0].fix(100145)
 
@@ -493,7 +504,7 @@ def initialize(m):
     m.fs.FSH.initialize(outlvl=logging.INFO)
     # scale the FSH unit
     _log.info("Scaling Finishing Superheater Unit")
-    fsh_scaler=scale_unit(m.fs.FSH,"FSH")
+    fsh_scaler = scale_unit(m.fs.FSH, "FSH")
 
     # --------- Attemperator inputs ------------------------------------------
     # propagate the FSH steam outlet state to the ATMP1 steam inlet
@@ -530,13 +541,13 @@ def initialize(m):
 
     # ----------Propagate Splitter outlet -----------------------------------
     # Propagate the splitter results before initializing either gas branch.
-    # Propogate the splitter outlet state 1 to the RH hot-side inlet
+    # Propagate the splitter outlet state 1 to the RH hot-side inlet
     _set_port(arc=m.fs.fg_fsh2rh)
-    # Propogate the splitter outlet state 2 to the PrSH hot-side inlet
-    _set_port(arc=m.fs.fg_fsh2PrSH, overwrite_fixed=True)    
+    # Propagate the splitter outlet state 2 to the PrSH hot-side inlet
+    _set_port(arc=m.fs.fg_fsh2PrSH, overwrite_fixed=True)
 
     # ----------- Reheater Superheater --------------------------------------
-    #   Steam from HP Turbine outlet 
+    #   Steam from HP Turbine outlet
     _log.info("Setting Reheater Inlet Conditions")
     m.fs.RH.cold_side_inlet.flow_mol[0].fix(21235.27)  # mol/s
     m.fs.RH.cold_side_inlet.enth_mol[0].fix(53942.7569)  # J/mol
@@ -597,9 +608,10 @@ def initialize(m):
     _set_port(arc=m.fs.fg_fsh2PrSH, overwrite_fixed=True)
     m.fs.PrSH.initialize(outlvl=logging.INFO)
 
-
     # Initialize the gas mixer from the refreshed RH and PrSH outlets.
-    _log.info("Setting Mixer Inlet Conditions from Reheater and Primary Superheater Outlets")
+    _log.info(
+        "Setting Mixer Inlet Conditions from Reheater and Primary Superheater Outlets"
+    )
     for inlet, outlet in (
         (m.fs.mix1.Reheat_out, m.fs.RH.hot_side_outlet),
         (m.fs.mix1.PrSH_out, m.fs.PrSH.hot_side_outlet),
@@ -638,12 +650,13 @@ def initialize(m):
     _set_port(arc=m.fs.fg_prsh2mix)
     _set_port(arc=m.fs.fg_mix2econ)
 
-    #------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     print("initialization done")
+
 
 def scale_solve(m):
     """
-    This function scales the entire flowsheet and solves it. 
+    This function scales the entire flowsheet and solves it.
 
     Function logic:
     1. Check the degrees of freedom of the flowsheet. If it is not zero, raise an error.
@@ -655,7 +668,7 @@ def scale_solve(m):
     ----------
     m : ConcreteModel
         The Pyomo model containing the flowsheet to be scaled and solved.
-    
+
     Returns:
     -------
     results : SolverResults
@@ -663,23 +676,38 @@ def scale_solve(m):
     """
     _log.info("Scaling and Solving Full Flowsheet")
     # make sure the flowsheet has 0 degrees of freedom before solving
-    if degrees_of_freedom(m.fs)!=0: raise RuntimeError("Connected flowsheet is not square")
+    if degrees_of_freedom(m.fs) != 0:
+        raise RuntimeError("Connected flowsheet is not square")
     # scale the entire flowsheet, but do not overwrite existing factors
-    fs_scaler=AutoScaler(overwrite=False) 
+    fs_scaler = AutoScaler(overwrite=False)
     # scale variables by magnitude, but do not overwrite existing factors
-    fs_scaler.scale_variables_by_magnitude(m.fs,descend_into=True) 
+    fs_scaler.scale_variables_by_magnitude(m.fs, descend_into=True)
     # scale constraints by Jacobian norm, but do not overwrite existing factors
-    fs_scaler.scale_constraints_by_jacobian_norm(m.fs,norm=2,descend_into=True)
-    _log.info("Unscaled active variables: {}".format(len(list_unscaled_variables(m.fs,descend_into=True,include_fixed=False))))
-    _log.info("Unscaled constraints: {}".format(len(list_unscaled_constraints(m.fs,descend_into=True))))
+    fs_scaler.scale_constraints_by_jacobian_norm(m.fs, norm=2, descend_into=True)
+    _log.info(
+        "Unscaled active variables: {}".format(
+            len(list_unscaled_variables(m.fs, descend_into=True, include_fixed=False))
+        )
+    )
+    _log.info(
+        "Unscaled constraints: {}".format(
+            len(list_unscaled_constraints(m.fs, descend_into=True))
+        )
+    )
 
-    #solve the connected flowsheet with the updated flue-gas path and refreshed steam path.
-    solver=get_solver()
-    results=solver.solve(m.fs,tee=True)
-    _log.info("Solver Status: {}, Termination Condition: {}".format(results.solver.status, results.solver.termination_condition))
-    if not check_optimal_termination(results): raise RuntimeError("Connected solve failed")
+    # solve the connected flowsheet with the updated flue-gas path and refreshed steam path.
+    solver = get_solver()
+    results = solver.solve(m.fs, tee=True)
+    _log.info(
+        "Solver Status: {}, Termination Condition: {}".format(
+            results.solver.status, results.solver.termination_condition
+        )
+    )
+    if not check_optimal_termination(results):
+        raise RuntimeError("Connected solve failed")
 
     return results
+
 
 def pfd_result(outfile, m, df):
     tags = {}
@@ -725,6 +753,7 @@ def pfd_result(outfile, m, df):
     with open(original_svg_file, "r") as f:
         svg_tag(tags, f, outfile=outfile)
 
+
 def _stream_dict(m):
     """Adds _streams to m, which contains a dictionary of streams for display
 
@@ -750,6 +779,7 @@ def _stream_dict(m):
         ]
     )
 
+
 def print_results(m):
     """
     This function prints the results of the boiler subflowsheet model.
@@ -758,7 +788,7 @@ def print_results(m):
     ----------
     m : ConcreteModel
         A Pyomo model from create_model()
-    
+
     Returns
     -------
     None
@@ -767,9 +797,12 @@ def print_results(m):
     _log.info("Results")
     _log.info("")
 
-    _log.info("viscosity gas side = %s", m.fs.PrSH.hot_side.properties_in[0].visc_d.value)
     _log.info(
-        "conductivity gas side = %s", m.fs.PrSH.hot_side.properties_in[0].therm_cond.value
+        "viscosity gas side = %s", m.fs.PrSH.hot_side.properties_in[0].visc_d.value
+    )
+    _log.info(
+        "conductivity gas side = %s",
+        m.fs.PrSH.hot_side.properties_in[0].therm_cond.value,
     )
     _log.info("velocity_tube = %s", m.fs.PrSH.v_tube[0].value)
     _log.info("velocity_shell = %s", m.fs.PrSH.v_shell[0].value)
@@ -807,10 +840,18 @@ def print_results(m):
     )
 
     _log.info("\n\n ------------- Economizer   ---------")
-    _log.info("liquid temp in = %s", value(m.fs.ECON.cold_side.properties_in[0].temperature))
-    _log.info("liquid temp out = %s", value(m.fs.ECON.cold_side.properties_out[0].temperature))
-    _log.info("gas temp in = %s", value(m.fs.ECON.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = %s", value(m.fs.ECON.hot_side.properties_out[0].temperature))
+    _log.info(
+        "liquid temp in = %s", value(m.fs.ECON.cold_side.properties_in[0].temperature)
+    )
+    _log.info(
+        "liquid temp out = %s", value(m.fs.ECON.cold_side.properties_out[0].temperature)
+    )
+    _log.info(
+        "gas temp in = %s", value(m.fs.ECON.hot_side.properties_in[0].temperature)
+    )
+    _log.info(
+        "gas temp out = %s", value(m.fs.ECON.hot_side.properties_out[0].temperature)
+    )
 
     _log.info("\n\n ------------- water wall  ---------")
     _log.info(
@@ -823,14 +864,23 @@ def print_results(m):
     )
 
     _log.info("\n\n ------------- Primary Superheater  ---------")
-    _log.info("steam temp in = %s", value(m.fs.PrSH.cold_side.properties_in[0].temperature))
-    _log.info("steam temp out = %s", value(m.fs.PrSH.cold_side.properties_out[0].temperature))
-    _log.info("gas temp in = %s", value(m.fs.PrSH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = %s", value(m.fs.PrSH.hot_side.properties_out[0].temperature))
+    _log.info(
+        "steam temp in = %s", value(m.fs.PrSH.cold_side.properties_in[0].temperature)
+    )
+    _log.info(
+        "steam temp out = %s", value(m.fs.PrSH.cold_side.properties_out[0].temperature)
+    )
+    _log.info(
+        "gas temp in = %s", value(m.fs.PrSH.hot_side.properties_in[0].temperature)
+    )
+    _log.info(
+        "gas temp out = %s", value(m.fs.PrSH.hot_side.properties_out[0].temperature)
+    )
 
     _log.info("\n\n ------------- Platen SH  ---------")
     _log.info(
-        "steam temp in = %s", value(m.fs.PlSH.control_volume.properties_in[0].temperature)
+        "steam temp in = %s",
+        value(m.fs.PlSH.control_volume.properties_in[0].temperature),
     )
     _log.info(
         "steam temp out = %s",
@@ -838,13 +888,17 @@ def print_results(m):
     )
 
     _log.info("\n\n ------------- Finishing Superheater  ---------")
-    _log.info("steam temp in = %s", value(m.fs.FSH.cold_side.properties_in[0].temperature))
+    _log.info(
+        "steam temp in = %s", value(m.fs.FSH.cold_side.properties_in[0].temperature)
+    )
     _log.info(
         "steam temp out (to attmp) = %s",
         value(m.fs.FSH.cold_side.properties_out[0].temperature),
     )
     _log.info("gas temp in = %s", value(m.fs.FSH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = %s", value(m.fs.FSH.hot_side.properties_out[0].temperature))
+    _log.info(
+        "gas temp out = %s", value(m.fs.FSH.hot_side.properties_out[0].temperature)
+    )
 
     _log.info("\n\n ------------- Attemperator  ---------")
     _log.info(
@@ -860,28 +914,35 @@ def print_results(m):
     _log.info("")
 
     _log.info("\n\n ------------- Reheater  ---------")
-    _log.info("liquid temp in = %s", value(m.fs.RH.cold_side.properties_in[0].temperature))
-    _log.info("liquid temp out = %s", value(m.fs.RH.cold_side.properties_out[0].temperature))
+    _log.info(
+        "liquid temp in = %s", value(m.fs.RH.cold_side.properties_in[0].temperature)
+    )
+    _log.info(
+        "liquid temp out = %s", value(m.fs.RH.cold_side.properties_out[0].temperature)
+    )
     _log.info("gas temp in = %s", value(m.fs.RH.hot_side.properties_in[0].temperature))
-    _log.info("gas temp out = %s", value(m.fs.RH.hot_side.properties_out[0].temperature))
+    _log.info(
+        "gas temp out = %s", value(m.fs.RH.hot_side.properties_out[0].temperature)
+    )
+
 
 def unfix_inlets(m):
     """
-    This method unfixes the inlet conditions for the economizer, primary superheater, water 
-    wall, reheater, finishing superheater, platen superheater, and splitter units in the boiler 
+    This method unfixes the inlet conditions for the economizer, primary superheater, water
+    wall, reheater, finishing superheater, platen superheater, and splitter units in the boiler
     subflowsheet model.
 
-    This function is intended to be used in a complete flowsheet where the conditions for the reheater, 
+    This function is intended to be used in a complete flowsheet where the conditions for the reheater,
     economizer and attemperator are determined by the rest steam cycle flowsheet unit models.
 
-    The remaining parameters are unfixed to ensure that the full model can be solved with the 
+    The remaining parameters are unfixed to ensure that the full model can be solved with the
     appropriate degrees of freedom.
 
-    Paramaters:
+    Parameters:
     ----------
     m : ConcreteModel
         A Pyomo model from create_model()
-    
+
     Returns:
     -------
     None
@@ -979,6 +1040,7 @@ def unfix_inlets(m):
     m.fs.ATMP1.Steam.flow_mol.unfix()
     m.fs.ATMP1.Steam.enth_mol.unfix()
     m.fs.ATMP1.Steam.pressure.unfix()
+
 
 if __name__ == "__main__":
     # generate the model and solver
